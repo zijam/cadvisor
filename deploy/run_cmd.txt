@@ -1,0 +1,10 @@
+docker run -itd \
+--volume=/:/rootfs:ro \
+--volume=/var/run:/var/run:rw \
+--volume=/sys:/sys:ro \
+--volume=/var/lib/docker/:/var/lib/docker:ro \
+--publish=8080:8080 \
+--detach=true  \
+--name=cadvisor  \
+level8/cadvisor:test \
+/usr/bin/cadvisor --logtostderr --log_cadvisor_usage=true --log_dir="/home/logs/" -storage_drive="graphite" -storage_driver_host="172.16.3.10:2003" -storage_driver_db="cadvisor"

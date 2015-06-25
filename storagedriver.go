@@ -24,6 +24,7 @@ import (
 	"github.com/google/cadvisor/cache/memory"
 	"github.com/google/cadvisor/storage"
 	"github.com/google/cadvisor/storage/bigquery"
+	"github.com/google/cadvisor/storage/graphite"
 	"github.com/google/cadvisor/storage/influxdb"
 	"github.com/google/cadvisor/storage/redis"
 )
@@ -88,6 +89,17 @@ func NewMemoryStorage(backendStorageName string) (*memory.InMemoryCache, error) 
 			*argDbHost,
 			*argDbBufferDuration,
 		)
+	case "graphite":
+		var hostname string
+		hostname, err = os.Hostname()
+		if err != nil {
+			return nil, err
+		}
+		backendStorage, err = graphite.New(
+			hostname,
+			*argDbHost,
+			*argDbName,
+		)		
 	default:
 		err = fmt.Errorf("unknown backend storage driver: %v", *argDbDriver)
 	}
